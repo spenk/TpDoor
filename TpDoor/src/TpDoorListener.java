@@ -11,76 +11,101 @@ public class TpDoorListener extends PluginListener{
 	//TODO order = x,y,z,world,dimension(,rotation,pitch:allowed,-disallowed) 
 	
 	public boolean onCommand(Player player, String[] split) {
-		if ((split[0].equalsIgnoreCase("/tpdoor"))&& (player.canUseCommand("/tpdoor"))) {
+		if ((split[0].equalsIgnoreCase("/tpdoor")) && (player.canUseCommand("/tpdoor"))) {
 			
 			if (split.length == 1){
+				player.sendMessage("§a-§b-§a-§b-§a-§b-§f[§bTpDoor§f]§a-§b-§a-§b-§a-§b-");
+				player.sendMessage("§f/tpdoor select - §bTo start selecting your tpDoor");
+				player.sendMessage("§f/tpdoor save - §bTo save your tpDoor");
+				player.sendMessage("§f/tpdoor delete - §bTo delete your tpDoor");
+				player.sendMessage("§f/tpdoor reset - §bTo reset your selecting");
+				player.sendMessage("§f/tpdoor undo - §bTo undo your last selected tpdoor");
+				player.sendMessage("§f/tpdoor deny <group> - §bTo deny a group using the selected tpDoor");
+			}
+			
+			if (split.length == 2){
 				if (split[1].equalsIgnoreCase("select")){
 					selection.put(player.getName(), new ArrayList<String>());
 					groupManager.put(player.getName(), new ArrayList<String>());
 					player.sendMessage("§f[§bTpDoors§f]§b - You started selecting.");
 				}
-			}
 			
-			if (split.length == 2){
-				
 				if (split[1].equalsIgnoreCase("save")){
 					if (selection.containsKey(player.getName())){
-						if (selection.get(player.getName()).isEmpty()){
+						if (!selection.get(player.getName()).isEmpty()){
 							ArrayList<String> selected = selection.get(player.getName());
 							filer.saveTpDoor(selection.get(player.getName()), groupManager.get(player.getName()), player.getLocation());
 							this.removeBlocks(player);
 							selection.remove(player.getName());
 							player.giveItem(20, selected.size());
 							player.sendMessage("§f[§bTpDoors§f]§b - TpDoor has been saved.");
+						} else {
+							player.sendMessage("§f[§bTpDoors§f]§c - You did not make a selection yet!");
 						}
+					} else {
+						player.sendMessage("§f[§bTpDoors§f]§c - You are not selecting a TpDoor!");
 					}
 				}
 				
 				if (split[1].equalsIgnoreCase("delete")){
 					if (selection.containsKey(player.getName())){
-						if (selection.get(player.getName()).isEmpty()){
+						if (!selection.get(player.getName()).isEmpty()){
 							ArrayList<String> selected = selection.get(player.getName());
 							filer.deleteTpDoor(selection.get(player.getName()));
 							this.removeBlocks(player);
 							selection.remove(player.getName());
 							player.giveItem(20, selected.size());
 							player.sendMessage("§f[§bTpDoors§f]§b - You deleted a TpDoor.");
+						} else {
+							player.sendMessage("§f[§bTpDoors§f]§c - You did not make a selection yet!");
 						}
+					} else {
+						player.sendMessage("§f[§bTpDoors§f]§c - You are not selecting a TpDoor!");
 					}
 				}
 				
 				if (split[1].equalsIgnoreCase("reset")){
 					if (selection.containsKey(player.getName())){
-						if (selection.get(player.getName()).isEmpty()){
+						if (!selection.get(player.getName()).isEmpty()){
 							ArrayList<String> selected = selection.get(player.getName());
 							this.removeBlocks(player);
 							selection.remove(player.getName());
 							selection.put(player.getName(), new ArrayList<String>());
 							player.giveItem(20, selected.size());
 							player.sendMessage("§f[§bTpDoors§f]§b - You restarted setting a TpDoor.");
+						} else {
+							player.sendMessage("§f[§bTpDoors§f]§c - You did not make a selection yet!");
 						}
+					} else {
+						player.sendMessage("§f[§bTpDoors§f]§c - You are not selecting a TpDoor!");
 					}
 				}
 				
 				if (split[1].equalsIgnoreCase("undo")){
 					if (selection.containsKey(player.getName())){
-						if (selection.get(player.getName()).isEmpty()){
+						if (!selection.get(player.getName()).isEmpty()){
 							ArrayList<String> selected = selection.get(player.getName());
 							this.removeBlocks(selected.get(selected.size()-1));
 							selected.remove(selected.size()-1);
 							selection.get(player.getName()).remove(selected.size()-1);
 							player.giveItem(20, 1);
 							player.sendMessage("§f[§bTpDoors§f]§b - Last selected block undone.");
+						} else {
+							player.sendMessage("§f[§bTpDoors§f]§c - You did not make a selection yet!");
 						}
+					} else {
+						player.sendMessage("§f[§bTpDoors§f]§c - You are not selecting a TpDoor!");
 					}
 				}
-			}
+		}
 			
 			if (split.length == 3){
 				if (split[1].equalsIgnoreCase("deny")){
 					if (selection.containsKey(player.getName())){
 						groupManager.get(player.getName()).add(split[2]);
 						player.sendMessage("§f[§bTpDoors§f]§b - group denied!");
+						}else{
+							player.sendMessage("§f[§bTpDoors§f]§c - You are not selecting a TpDoor!");
 					}
 				}
 			}
@@ -118,13 +143,14 @@ public class TpDoorListener extends PluginListener{
 		for (String block : blocks){
 			String[] locationData = block.split(",");
 			World world = etc.getServer().getWorld(locationData[3])[Integer.parseInt(locationData[4])];
-			world.setBlockData(Integer.parseInt(locationData[0]), Integer.parseInt(locationData[1]), Integer.parseInt(locationData[2]), 0);
+			world.setBlockAt(0,Integer.parseInt(locationData[0]), Integer.parseInt(locationData[1]), Integer.parseInt(locationData[2]));
 		}
 	}
-	public void removeBlocks(String location){
+	
+    public void removeBlocks(String location){
 		String[] locationData = location.split(",");
 		World world = etc.getServer().getWorld(locationData[3])[Integer.parseInt(locationData[4])];
-		world.setBlockData(Integer.parseInt(locationData[0]), Integer.parseInt(locationData[1]), Integer.parseInt(locationData[2]), 0);
+		world.setBlockAt(0,Integer.parseInt(locationData[0]), Integer.parseInt(locationData[1]), Integer.parseInt(locationData[2]));
 	}
 
 }

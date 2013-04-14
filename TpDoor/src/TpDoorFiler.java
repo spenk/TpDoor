@@ -25,8 +25,12 @@ public class TpDoorFiler {
 		}
 		
 		String to = location.x+","+location.y+","+location.z+","+location.rotX+","+location.rotY+","+location.getWorld().getName()+","+location.dimension;
-		for (String loc : arrayList){
-		file.setString(loc, to+":"+groups);
+		for (String loc : arrayList) {
+			if (!groups.equals("")) {
+				file.setString(loc, to + ":" + groups);
+			} else {
+				file.setString(loc, to);
+			}
 		}
 	}
 	
@@ -65,9 +69,12 @@ public class TpDoorFiler {
 	public String getLocation(String location){
 		file = new PropertiesFile("plugins/config/TpDoor/tpdoor.txt");
 		if (file.containsKey(location)){
+			if (file.getProperty(location).contains(":")){
+			return file.getProperty(location).split(":")[0];
+			}else{
 			return file.getProperty(location);
+			}
 		}
 		return null;
 	}
-	
 }
