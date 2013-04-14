@@ -37,7 +37,9 @@ public class TpDoorListener extends PluginListener{
 							filer.saveTpDoor(selection.get(player.getName()), groupManager.get(player.getName()), player.getLocation());
 							this.removeBlocks(player);
 							selection.remove(player.getName());
+							if (player.getCreativeMode() != 1){
 							player.giveItem(20, selected.size());
+							}
 							player.sendMessage("§f[§bTpDoors§f]§b - TpDoor has been saved.");
 						} else {
 							player.sendMessage("§f[§bTpDoors§f]§c - You did not make a selection yet!");
@@ -54,7 +56,9 @@ public class TpDoorListener extends PluginListener{
 							filer.deleteTpDoor(selection.get(player.getName()));
 							this.removeBlocks(player);
 							selection.remove(player.getName());
+							if (player.getCreativeMode() != 1){
 							player.giveItem(20, selected.size());
+							}
 							player.sendMessage("§f[§bTpDoors§f]§b - You deleted a TpDoor.");
 						} else {
 							player.sendMessage("§f[§bTpDoors§f]§c - You did not make a selection yet!");
@@ -71,7 +75,9 @@ public class TpDoorListener extends PluginListener{
 							this.removeBlocks(player);
 							selection.remove(player.getName());
 							selection.put(player.getName(), new ArrayList<String>());
+							if (player.getCreativeMode() != 1){
 							player.giveItem(20, selected.size());
+							}
 							player.sendMessage("§f[§bTpDoors§f]§b - You restarted setting a TpDoor.");
 						} else {
 							player.sendMessage("§f[§bTpDoors§f]§c - You did not make a selection yet!");
@@ -88,7 +94,9 @@ public class TpDoorListener extends PluginListener{
 							this.removeBlocks(selected.get(selected.size()-1));
 							selected.remove(selected.size()-1);
 							selection.get(player.getName()).remove(selected.size()-1);
+							if (player.getCreativeMode() != 1){
 							player.giveItem(20, 1);
+							}
 							player.sendMessage("§f[§bTpDoors§f]§b - Last selected block undone.");
 						} else {
 							player.sendMessage("§f[§bTpDoors§f]§c - You did not make a selection yet!");
